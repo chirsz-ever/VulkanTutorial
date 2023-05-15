@@ -28,7 +28,7 @@ daux.io 的基本使用规则和其支持的 Markdwon 语法。
 参考 [OpenGL 3.3 教程的翻译术语对照](https://github.com/cybercser/OpenGL_3_3_Tutorial_Translation/blob/master/%E7%BF%BB%E8%AF%91%E6%9C%AF%E8%AF%AD%E5%AF%B9%E7%85%A7.md)：
 
 - 以[《游戏引擎架构》中英词汇索引表](https://www.cnblogs.com/miloyip/p/GameEngineArchitectureIndex.html)为参考标准；
-- 某些术语可以保留英文原文，如使用“uniform buffer”或“uniform 缓冲”而非“统一缓冲区”，“统一的缓冲区”。
+- 某些术语可以保留英文原文，如使用“uniform buffer”或“uniform 缓冲”而非“统一缓冲区”，“统一的缓冲区”。或者是在中文翻译后面用括号引出原文，如“uniform buffer”可翻译为“统一缓冲区（uniform buffer）”
 
 <!-- TODO: 列出需要保留英文原文的情形，如 uniform buffer -->
 <!-- TODO: 致谢 -->
