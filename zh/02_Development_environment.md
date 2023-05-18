@@ -16,7 +16,7 @@ SDK可以从[LunarG网站](https://vulkan.lunarg.com/)下载，使用页面底�
 
 ![](/images/cube_demo.png)
 
-如果您收到错误消息，请确保您的驱动程序是最新的，包括Vulkan运行时，并且您的显卡是受支持的。有关主要供应商驱动程序的链接，请参阅[简介章节](!zh/Introduction)。
+如果您收到错误消息，请确保您的驱动程序是最新的，包括Vulkan Runtime，并且您的显卡是受支持的。有关主要供应商驱动程序的链接，请参阅[简介章节](!zh/Introduction)。
 
 这个目录中还有另一个对开发有用的程序。`glslangValidator.exe`和`glslc.exe`将用于编译人类可读的着色器[GLSL](https://en.wikipedia.org/wiki/OpenGL_Shading_Language)到二进制编码。我们将在[着色器模块](!zh/Drawing_a_triangle/Graphics_pipeline_basics/Shader_modules)一章中对此进行深入介绍。`Bin`目录还包含Vulkan加载程序和验证层的二进制文件，而`Lib`目录包含库。
 
@@ -148,98 +148,77 @@ The number of extensions should be non-zero. Congratulations, you're all set for
 
 ## Linux
 
-These instructions will be aimed at Ubuntu, Fedora and Arch Linux users, but you may be able to follow
-along by changing the package manager-specific commands to the ones that are appropriate for you. You should have a compiler that supports C++17 (GCC 7+ or Clang 5+). You'll also need `make`.
+这些说明将针对Ubuntu、Fedora和Arch Linux用户，但您可以将包管理器特定的命令更改为适合您的命令。您应该有一个支持C++17（GCC 7+或Clang 5+）的编译器。您还需要 `make`。
 
 ### Vulkan Packages
 
-The most important components you'll need for developing Vulkan applications on Linux are the Vulkan loader, validation layers, and a couple of command-line utilities to test whether your machine is Vulkan-capable:
+在Linux上开发Vulkan应用程序所需的最重要组件是Vulkan加载程序、验证层和几个命令行实用程序，用于测试您的机器是否支持Vulkan：
 
-* `sudo apt install vulkan-tools` or `sudo dnf install vulkan-tools`: Command-line utilities, most importantly `vulkaninfo` and `vkcube`. Run these to confirm your machine supports Vulkan.
-* `sudo apt install libvulkan-dev` or `sudo dnf install vulkan-loader-devel` : Installs Vulkan loader. The loader looks up the functions in the driver at runtime, similarly to GLEW for OpenGL - if you're familiar with that.
-* `sudo apt install vulkan-validationlayers-dev spirv-tools` or `sudo dnf install mesa-vulkan-devel vulkan-validation-layers-devel`: Installs the standard validation layers and required SPIR-V tools. These are crucial when debugging Vulkan applications, and we'll discuss them in the upcoming chapter.
+* `sudo apt install vulkan-tools` 或 `sudo dnf install vulkan-tools`：命令行实用程序，最重要的是`vulkaninfo`和`vkcube`。运行这些以确认您的机器支持Vulkan。
 
-On Arch Linux, you can run `sudo pacman -S vulkan-devel` to install all the
-required tools above.
+* `sudo apt install libvulkan-dev` 或 `sudo dnf install vulkan-loader-devel`：安装Vulkan加载程序。加载程序在运行时查找驱动程序中的函数，类似于OpenGL的GLEW,如果你熟悉的话。
 
-If installation was successful, you should be all set with the Vulkan portion. Remember to run
- `vkcube` and ensure you see the following pop up in a window:
+* `sudo apt install vulkan-validationlayers-dev spirv-tools` 或 `sudo dnf install mesa-vulkan-devel vulkan-validation-layers-devel`：安装标准验证层和所需的SPIR-V工具。这些在调试Vulkan应用程序时至关重要，我们将在下一章中讨论它们。
+
+在Arch Linux上，您可以运行 `sudo pacman -S vulkan-devel` 来安装上面所需的所有工具。
+
+如果安装成功，您应该已经做好了Vulkan部分的准备。请记住运行`vkcube`，并确保您在窗口中看到以下弹出窗口：
 
 ![](/images/cube_demo_nowindow.png)
 
-If you receive an error message then ensure that your drivers are up-to-date,
-include the Vulkan runtime and that your graphics card is supported. See the
-[introduction chapter](!en/Introduction) for links to drivers from the major
-vendors.
+如果您收到错误消息，请确保您的驱动程序是最新的，包括Vulkan Runtime，并且您的显卡是受支持的。有关主要供应商驱动程序的链接，请参阅[简介章节](!zh/Introduction)。
 
 ### GLFW
 
-As mentioned before, Vulkan by itself is a platform agnostic API and does not
-include tools for creation a window to display the rendered results. To benefit
-from the cross-platform advantages of Vulkan and to avoid the horrors of X11,
-we'll use the [GLFW library](http://www.glfw.org/) to create a window, which
-supports Windows, Linux and MacOS. There are other libraries available for this
-purpose, like [SDL](https://www.libsdl.org/), but the advantage of GLFW is that
-it also abstracts away some of the other platform-specific things in Vulkan
-besides just window creation.
+如前所述，Vulkan本身是一个平台无关的API，不包括用于创建窗口以显示渲染结果的工具。为了利于Vulkan的跨平台优势并避免Win32的繁琐，我们将使用[GLFW库](http://www.glfw.org/)创建一个支持Windows、Linux和MacOS的窗口。还有其他库可用于此目的，如[SDL](https://www.libsdl.org/)，但GLFW的优势在于，除了创建窗口之外，它还抽象了Vulkan中其他一些特定于平台的东西。
 
-We'll be installing GLFW from the following command:
+我们将通过以下命令安装GLFW：
 
 ```bash
 sudo apt install libglfw3-dev
 ```
-or
+或者
 ```bash
 sudo dnf install glfw-devel
 ```
-or
+或者
 ```bash
 sudo pacman -S glfw-wayland # glfw-x11 for X11 users
 ```
 
 ### GLM
+与DirectX 12不同，Vulkan不包括用于线性代数运算的库，所以我们必须下载一个。[GLM](http://glm.g-truc.net/)是一个很好的库，设计用于图形API，也常用于OpenGL。
 
-Unlike DirectX 12, Vulkan does not include a library for linear algebra
-operations, so we'll have to download one. [GLM](http://glm.g-truc.net/) is a
-nice library that is designed for use with graphics APIs and is also commonly
-used with OpenGL.
-
-It is a header-only library that can be installed from the `libglm-dev` or
-`glm-devel` package:
+GLM是一个只有头文件的库，它可以从 `libglm-dev` 或者 `glm-devel` 包安装:
 
 ```bash
 sudo apt install libglm-dev
 ```
-or
+或者
 ```bash
 sudo dnf install glm-devel
 ```
-or
+或者
 ```bash
 sudo pacman -S glm
 ```
 
-### Shader Compiler
+### 着色器编译
 
-We have just about all we need, except we'll want a program to compile shaders from the human-readable  [GLSL](https://en.wikipedia.org/wiki/OpenGL_Shading_Language) to bytecode.
+我们几乎已经有了我们所需要的一切，但是我们还需要一个将人类可读的编译着色器语音[GLSL](https://en.wikipedia.org/wiki/OpenGL_Shading_Language)翻译到二进制文件的程序。
 
-Two popular shader compilers are Khronos Group's `glslangValidator` and Google's `glslc`. The latter has a familiar GCC- and Clang-like usage, so we'll go with that: on Ubuntu, download Google's [unofficial binaries](https://github.com/google/shaderc/blob/main/downloads.md) and copy `glslc` to your `/usr/local/bin`. Note you may need to `sudo` depending on your permissions. On Fedora use `sudo dnf install glslc`, while on Arch Linux run `sudo pacman -S shaderc`.  To test, run `glslc` and it should rightfully complain we didn't pass any shaders to compile:
+两个流行的着色器编译器是Khronos组织的`glslangValidator`和Google的`glslc`。后者有一个熟悉的类似GCC和Clang的用法，所以我们将继续使用它。在Ubuntu上，下载谷歌的[非官方二进制文件](https://github.com/google/shaderc/blob/main/downloads.md)并将`glslc`复制到您的`/usr/local/bin`中。请注意，根据您的权限，您可能需要`sudo`。在Fedora上使用`sudo dnf install glslc`，而在Arch Linux上运行`sudo pacman-S shaderc`。要进行测试，请运行`glslc`，它应该会理所当然地抱怨我们没有传递任何着色器进行编译：
 
 `glslc: error: no input files`
 
-We'll cover `glslc` in depth in the [shader modules](!en/Drawing_a_triangle/Graphics_pipeline_basics/Shader_modules) chapter.
+我们将在[着色器模块](!en/Drawing_a_triangle/Graphics_pipeline_basics/Shader_modules)一章中深入介绍`glslc`。
 
-### Setting up a makefile project
 
-Now that you have installed all of the dependencies, we can set up a basic
-makefile project for Vulkan and write a little bit of code to make sure that
-everything works.
+### 设置Makefile项目
 
-Create a new directory at a convenient location with a name like `VulkanTest`.
-Create a source file called `main.cpp` and insert the following code. Don't
-worry about trying to understand it right now; we're just making sure that you
-can compile and run Vulkan applications. We'll start from scratch in the next
-chapter.
+现在您已经安装了所有的依赖项，我们可以为Vulkan设置一个基本的makefile项目，并编写一些代码来确保一切正常。
+
+在方便的位置创建一个新目录，像是`VulkanTest`。创建一个名为`main.cpp`的源文件，并插入以下代码。不要担心现在就试图理解它；我们只是确保您可以编译和运行Vulkan应用程序。我们将在下一章从头开始。
 
 ```c++
 #define GLFW_INCLUDE_VULKAN
@@ -279,56 +258,48 @@ int main() {
 }
 ```
 
-Next, we'll write a makefile to compile and run this basic Vulkan code. Create a
-new empty file called `Makefile`. I will assume that you already have some basic
-experience with makefiles, like how variables and rules work. If not, you can
-get up to speed very quickly with [this tutorial](https://makefiletutorial.com/).
+接下来，我们将编写一个makefile来编译和运行这个基本的Vulkan代码。创建一个名为`Makefile`的新空文件。我假设您已经对makefile有了一些基本的经验，比如变量和规则是如何工作的。如果没有，你可以通过[本教程](https://makefiletutorial.com/)很快跟上进度。
 
-We'll first define a couple of variables to simplify the remainder of the file.
-Define a `CFLAGS` variable that will specify the basic compiler flags:
+我们将首先定义几个变量来简化文件的其余部分。定义一个`FLAGS`变量，该变量将指定基本编译器标志：
 
 ```make
 CFLAGS = -std=c++17 -O2
 ```
 
-We're going to use modern C++ (`-std=c++17`), and we'll set optimization level to O2. We can remove -O2 to compile programs faster, but we should remember to place it back for release builds.
+我们将使用现代C++（`-std=C++17`），并将优化级别设置为O2。我们可以删除-O2以更快地编译程序，但我们应该记住将其放回发布版本。
 
-Similarly, define the linker flags in a `LDFLAGS` variable:
+类似地，在`LDFLAGS`变量中定义链接器标志：
 
 ```make
 LDFLAGS = -lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
 ```
 
-The flag `-lglfw` is for GLFW, `-lvulkan` links with the Vulkan function loader and the remaining flags are low-level system libraries that GLFW needs. The remaining flags are dependencies of GLFW itself: the threading and window management.
+标志`-lglfw`用于GLFW，`-lvulkan`链接Vulkan函数加载程序，其余标志为GLFW所需的低级系统库。剩下的标志是GLFW本身的依赖项：线程和窗口管理。
 
-It is possible that the `Xxf68vm` and `Xi` libraries are not yet installed on your system. You can find them in the following packages:
+有可能 `Xxf68vm` 和 `Xi` 库尚未安装在您的系统上。您可以在以下软件包中找到它们：
 
 ```bash
 sudo apt install libxxf86vm-dev libxi-dev
 ```
-or
+或者
 ```bash
 sudo dnf install libXi-devel libXxf86vm-devel
 ```
-or
+或者
 ```bash
 sudo pacman -S libxi libxxf86vm
 ```
 
-Specifying the rule to compile `VulkanTest` is straightforward now. Make sure to
-use tabs for indentation instead of spaces.
+现在，指定要编译`VulkanTest`的规则很简单。请确保使用制表符（Tabs）而不是空格进行缩进。
 
 ```make
 VulkanTest: main.cpp
 	g++ $(CFLAGS) -o VulkanTest main.cpp $(LDFLAGS)
 ```
 
-Verify that this rule works by saving the makefile and running `make` in the
-directory with `main.cpp` and `Makefile`. This should result in a `VulkanTest`
-executable.
+通过保存makefile并在带有`main.cpp`和`makefile`的目录中运行`make`，验证此规则是否有效。这应该会产生一个`VulkanTest`可执行文件。
 
-We'll now define two more rules, `test` and `clean`, where the former will
-run the executable and the latter will remove a built executable:
+现在我们将再定义两个规则，`test`和`clean`，前者将运行可执行文件，后者将删除已构建的可执行文件：
 
 ```make
 .PHONY: test clean
@@ -340,7 +311,7 @@ clean:
 	rm -f VulkanTest
 ```
 
-Running `make test` should show the program running successfully, and displaying the number of Vulkan extensions. The application should exit with the success return code (`0`) when you close the empty window. You should now have a complete makefile that resembles the following:
+运行`make-test`应显示程序成功运行，并显示Vulkan扩展的数量。关闭空窗口时，应用程序应退出，并返回成功返回代码（`0`）。现在，您应该有一个完整的生成文件，类似于以下内容：
 
 ```make
 CFLAGS = -std=c++17 -O2
@@ -358,9 +329,9 @@ clean:
 	rm -f VulkanTest
 ```
 
-You can now use this directory as a template for your Vulkan projects. Make a copy, rename it to something like `HelloTriangle` and remove all of the code in `main.cpp`.
+现在，您可以将此目录用作Vulkan项目的模板。制作一个副本，将其重命名为`HelloTriangle`，并删除`main.cpp`中的所有代码。
 
-You are now all set for [the real adventure](!en/Drawing_a_triangle/Setup/Base_code).
+现在，您已经为[真正的冒险](!zh/Drawing_a_triangle/Setup/Base_code)做好了准备
 
 ## MacOS
 
