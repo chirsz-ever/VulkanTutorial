@@ -331,31 +331,32 @@ clean:
 
 现在，您可以将此目录用作Vulkan项目的模板。制作一个副本，将其重命名为`HelloTriangle`，并删除`main.cpp`中的所有代码。
 
-现在，您已经为[真正的冒险](!zh/Drawing_a_triangle/Setup/Base_code)做好了准备
+现在，您已经为[真正的冒险](!zh/Drawing_a_triangle/Setup/Base_code)做好了准备。
 
 ## MacOS
 
-These instructions will assume you are using Xcode and the [Homebrew package manager](https://brew.sh/). Also, keep in mind that you will need at least MacOS version 10.11, and your device needs to support the [Metal API](https://en.wikipedia.org/wiki/Metal_(API)#Supported_GPUs).
+这些说明将假设您正在使用Xcode和[Homebrew package manager](https://brew.sh/). 此外，请记住，您至少需要10.11版MacOS，并且您的设备需要支持[Metal API](https://en.wikipedia.org/wiki/Metal_(API)#Supported_GPUs)。
 
 ### Vulkan SDK
 
-The most important component you'll need for developing Vulkan applications is the SDK. It includes the headers, standard validation layers, debugging tools and a loader for the Vulkan functions. The loader looks up the functions in the driver at runtime, similarly to GLEW for OpenGL - if you're familiar with that.
+开发Vulkan应用程序所需的最重要的组件是SDK。它包括Vulkan函数的标头、标准验证层、调试工具和加载程序。加载程序在运行时查找驱动程序中的函数，类似于OpenGL的GLEW，如果你熟悉的话。
 
-The SDK can be downloaded from [the LunarG website](https://vulkan.lunarg.com/) using the buttons at the bottom of the page. You don't have to create an account, but it will give you access to some additional documentation that may be useful to you.
+SDK可以从[LunarG网站](https://vulkan.lunarg.com/)下载，使用页面底部的按钮。您不必创建帐户，但它可以提供一些可能对您有用的附加文档。
 
 ![](/images/vulkan_sdk_download_buttons.png)
 
-The SDK version for MacOS internally uses [MoltenVK](https://moltengl.com/). There is no native support for Vulkan on MacOS, so what MoltenVK does is actually act as a layer that translates Vulkan API calls to Apple's Metal graphics framework. With this you can take advantage of debugging and performance benefits of Apple's Metal framework.
 
-After downloading it, simply extract the contents to a folder of your choice (keep in mind you will need to reference it when creating your projects on Xcode). Inside the extracted folder, in the `Applications` folder you should have some executable files that will run a few demos using the SDK. Run the `vkcube` executable and you will see the following:
+MacOS的SDK版本内部使用[MoltenVK](https://moltengl.com/). MacOS上没有对Vulkan的本机支持，因此MoltenVK实际上充当了一个层，将Vulkan-API调用转换为苹果的Metal图形框架。有了它，您可以充分利用Apple的Metal框架的调试和性能优势。
+
+下载后，只需将内容提取到您选择的文件夹中（请记住，在Xcode上创建项目时需要引用它）。在提取的文件夹中，在`Applications`文件夹中，您应该有一些可执行文件，这些文件将使用SDK运行一些演示。运行`vkcube`可执行文件，您将看到以下内容：
 
 ![](/images/cube_demo_mac.png)
 
 ### GLFW
 
-As mentioned before, Vulkan by itself is a platform agnostic API and does not include tools for creation a window to display the rendered results. We'll use the [GLFW library](http://www.glfw.org/) to create a window, which supports Windows, Linux and MacOS. There are other libraries available for this purpose, like [SDL](https://www.libsdl.org/), but the advantage of GLFW is that it also abstracts away some of the other platform-specific things in Vulkan besides just window creation.
+如前所述，Vulkan本身是一个平台无关的API，不包括用于创建窗口以显示渲染结果的工具。为了利于Vulkan的跨平台优势并避免Win32的繁琐，我们将使用[GLFW库](http://www.glfw.org/)创建一个支持Windows、Linux和MacOS的窗口。还有其他库可用于此目的，如[SDL](https://www.libsdl.org/)，但GLFW的优势在于，除了创建窗口之外，它还抽象了Vulkan中其他一些特定于平台的东西。
 
-To install GLFW on MacOS we will use the Homebrew package manager to get the `glfw` package:
+要在MacOS上安装GLFW，我们将使用Homebrew软件包管理器来获取`glfw`软件包：
 
 ```bash
 brew install glfw
@@ -363,27 +364,27 @@ brew install glfw
 
 ### GLM
 
-Vulkan does not include a library for linear algebra operations, so we'll have to download one. [GLM](http://glm.g-truc.net/) is a nice library that is designed for use with graphics APIs and is also commonly used with OpenGL.
+与DirectX 12不同，Vulkan不包括用于线性代数运算的库，所以我们必须下载一个。[GLM](http://glm.g-truc.net/)是一个很好的库，设计用于图形API，也常用于OpenGL。
 
-It is a header-only library that can be installed from the `glm` package:
+GLM是一个只有头文件的库，它可以从 `glm` 包安装:
 
 ```bash
 brew install glm
 ```
 
-### Setting up Xcode
+### 设置 Xcode
 
-Now that all the dependencies are installed we can set up a basic Xcode project for Vulkan. Most of the instructions here are essentially a lot of "plumbing" so we can get all the dependencies linked to the project. Also, keep in mind that during the following instructions whenever we mention the folder `vulkansdk` we are refering to the folder where you extracted the Vulkan SDK.
+现在所有的依赖项都安装好了，我们可以为Vulkan设置一个基本的Xcode项目。这里的大多数说明本质上都是很多“管道（plumbing）”，所以我们可以将所有依赖项链接到项目。此外，请记住，在以下说明中，每当我们提到文件夹`vulkansdk`时，我们指的是您提取Vulkan SDK的文件夹。
 
-Start Xcode and create a new Xcode project. On the window that will open select Application > Command Line Tool.
+启动Xcode并创建一个新的Xcode项目。在将打开的窗口中，选择 Application > Command Line Tool。
 
 ![](/images/xcode_new_project.png)
 
-Select `Next`, write a name for the project and for `Language` select `C++`.
+选择 `Next`, 给项目起个名字并选择 `Language` 为 `C++`.
 
 ![](/images/xcode_new_project_2.png)
 
-Press `Next` and the project should have been created. Now, let's change the code in the generated `main.cpp` file to the following code:
+按`下一步`，项目应该已经创建。现在，让我们将生成的`main.cpp`文件中的代码更改为以下代码：
 
 ```c++
 #define GLFW_INCLUDE_VULKAN
@@ -423,41 +424,41 @@ int main() {
 }
 ```
 
-Keep in mind you are not required to understand all this code is doing yet, we are just setting up some API calls to make sure everything is working.
+请记住，您还不需要了解所有这些代码，我们只是设置了一些API调用，以确保一切正常。
 
-Xcode should already be showing some errors such as libraries it cannot find. We will now start configuring the project to get rid of those errors. On the *Project Navigator* panel select your project. Open the *Build Settings* tab and then:
+Xcode应该已经显示了一些错误，比如它找不到的库。我们现在将开始配置项目以消除这些错误。在*项目导航器* 面板上，选择您的项目。打开*生成设置*选项卡，然后：
 
-* Find the **Header Search Paths** field and add a link to `/usr/local/include` (this is where Homebrew installs headers, so the glm and glfw3 header files should be there) and a link to `vulkansdk/macOS/include` for the Vulkan headers.
-* Find the **Library Search Paths** field and add a link to `/usr/local/lib` (again, this is where Homebrew installs libraries, so the glm and glfw3 lib files should be there) and a link to `vulkansdk/macOS/lib`.
+* 找到 **Header Search Paths** 字段，并添加一个指向`/usr/local/include`的链接（这是Homebrew安装Header的地方，所以glm和glfw3头文件应该在那里），以及一个指向Vulkan头的`vulkansdk/macOS/include`的链接。
+* 找到 **库搜索路径** 字段，并添加到`/usr/local/lib`的链接（同样，这是Homebrew安装库的地方，所以glm和glfw3 lib文件应该在那里）和到`vulkansdk/macOS/lib`的链接。
 
-It should look like so (obviously, paths will be different depending on where you placed on your files):
+它应该是这样的（很明显，路径会根据您在文件上的位置而有所不同）：
 
 ![](/images/xcode_paths.png)
 
-Now, in the *Build Phases* tab, on **Link Binary With Libraries** we will add both the `glfw3` and the `vulkan` frameworks. To make things easier we will be adding the dynamic libraries in the project (you can check the documentation of these libraries if you want to use the static frameworks).
+现在，在 *Build Phases* 选项卡中，在 **Link Binary With Libraries** 上，我们将添加`glfw3`和`vulkan`框架。为了让事情变得更容易，我们将在项目中添加动态库（如果你想使用静态框架，你可以查看这些库的文档）。
 
-* For glfw open the folder `/usr/local/lib` and there you will find a file name like `libglfw.3.x.dylib` ("x" is the library's version number, it might be different depending on when you downloaded the package from Homebrew). Simply drag that file to the Linked Frameworks and Libraries tab on Xcode.
-* For vulkan, go to `vulkansdk/macOS/lib`. Do the same for the both files `libvulkan.1.dylib` and `libvulkan.1.x.xx.dylib` (where "x" will be the version number of the the SDK you downloaded).
+* 对于glfw，打开文件夹`/usr/local/lib`，你会发现一个类似于`libglfw.3.x.dylib`的文件名（“x”是库的版本号，它可能会有所不同，这取决于你从Homebrew下载包的时间）。只需将该文件拖动到Xcode上的链接框架和库选项卡即可。
+* 对于vulkan，请转到`vulkansdk/macOS/lib`。对`libvulkan.1.dylib`和`libvulcan.1.x.xx.dylib`这两个文件执行相同操作（其中“x”将是您下载的SDK的版本号）。
 
-After adding those libraries, in the same tab on **Copy Files** change `Destination` to "Frameworks", clear the subpath and deselect "Copy only when installing". Click on the "+" sign and add all those three frameworks here aswell.
+添加这些库后，在 **Copy Files** 的同一选项卡中将`Destination`更改为"Frameworks"，清除子路径并取消选择"Copy only when installing"。单击"+"号，并在此处添加所有这三个框架。
 
-Your Xcode configuration should look like:
+您的Xcode配置应该如下所示：
 
 ![](/images/xcode_frameworks.png)
 
-The last thing you need to setup are a couple of environment variables. On Xcode toolbar go to `Product` > `Scheme` > `Edit Scheme...`, and in the `Arguments` tab add the two following environment variables:
+最后需要设置的是几个环境变量。在Xcode工具栏上，转到`Product` > `Scheme` > `Edit Scheme...`，并在`Arguments`选项卡中添加以下两个环境变量：
 
 * VK_ICD_FILENAMES = `vulkansdk/macOS/share/vulkan/icd.d/MoltenVK_icd.json`
 * VK_LAYER_PATH = `vulkansdk/macOS/share/vulkan/explicit_layer.d`
 
-It should look like so:
+看起来应该是这样的：
 
 ![](/images/xcode_variables.png)
 
-Finally, you should be all set! Now if you run the project (remembering to setting the build configuration to Debug or Release depending on the configuration you chose) you should see the following:
+最后，你应该准备好了！现在，如果您运行项目（记住根据您选择的配置将生成配置设置为Debug或Release），您应该看到以下内容：
 
 ![](/images/xcode_output.png)
 
-The number of extensions should be non-zero. The other logs are from the libraries, you might get different messages from those depending on your configuration.
+扩展的数量应为非零。其他日志来自库，根据您的配置，您可能会收到不同的消息。
 
-You are now all set for [the real thing](!en/Drawing_a_triangle/Setup/Base_code).
+现在，您已经为[真正的冒险](!zh/Drawing_a_triangle/Setup/Base_code)做好了准备
