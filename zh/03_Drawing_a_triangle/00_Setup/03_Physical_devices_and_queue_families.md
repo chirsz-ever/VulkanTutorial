@@ -320,6 +320,6 @@ for (const auto& queueFamily : queueFamilies) {
 }
 ```
 
-很好！这些就是我们目前需要的所有的查找合适物理设备的东西了！下一步就是[创建一个逻辑设备](!zh/Drawing_a_triangle/Setup/Logical_device_and_queue)与它交互。
+很好！这些就是我们目前需要的所有的查找合适物理设备的东西了！下一步就是[创建一个逻辑设备](!zh/Drawing_a_triangle/Setup/Logical_device_and_queues)与它交互。
 
 [C++ code](/code/03_physical_device_selection.cpp)
