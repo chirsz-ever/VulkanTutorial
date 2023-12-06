@@ -4,8 +4,8 @@ title: 物理设备与队列族
 
 ## 选择一个物理设备
 
-通过 VkInstance 初始化了 Vulkan 的库之后，我们需要在系统中选择一个支持我们需要的功能的显卡。事实上，我们可以同时选择并使用任意
-数量的显卡，但是在这个教程里，我们会专注于第一个满足我们需要的显卡。
+通过 VkInstance 初始化了 Vulkan 的库之后，我们需要在系统中选择一个支持我们需要的功能的显卡。事实上，我们可以同时选择并使用
+任意数量的显卡，但是在这个教程里，我们会专注于第一个满足我们需要的显卡。
 
 我们会添加一个函数 `pickPhysicalDevice`，并且在 `initVulkan` 函数中使用它。
 
@@ -21,8 +21,8 @@ void pickPhysicalDevice() {
 }
 ```
 
-我们最终选择使用的显卡会被添加为一个 VkPhysicalDevice 句柄的成员变量。在 VkInstance 被销毁的时候，这个对象也会被销毁，所以我们
-不需要在 cleanup 里面对它进行清理。
+我们最终选择使用的显卡会被添加为一个 VkPhysicalDevice 句柄的成员变量。在 VkInstance 被销毁的时候，这个对象也会被销毁，所以
+我们不需要在 cleanup 里面对它进行清理。
 
 ```c++
 VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
@@ -73,8 +73,8 @@ if (physicalDevice == VK_NULL_HANDLE) {
 }
 ```
 
-下一部分会介绍我们在 `isDeviceSuitable` 要检查的第一个要求。在后面的章节中，我们开始使用更多 Vulkan 的功能的时候，我们也会扩展
-这个函数来包含更多的检查。
+下一部分会介绍我们在 `isDeviceSuitable` 要检查的第一个要求。在后面的章节中，我们开始使用更多 Vulkan 的功能的时候，我们也会
+扩展这个函数来包含更多的检查。
 
 ## 检查设备的基础兼容性
 
@@ -201,11 +201,11 @@ QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
 }
 ```
 
-但是如果队列族不能使用怎么办？我们可以在 `findQueueFamilies` 中抛出一个异常，但是这个函数不是一个处理设备兼容性的地方。比如说，
-我们可能更*倾向于*一个有专用的传输队列族的设备，而不是需要它。所以我们需要判断一个特定的队列族是否存在。
+但是如果队列族不能使用怎么办？我们可以在 `findQueueFamilies` 中抛出一个异常，但是这个函数不是一个处理设备兼容性的地方。比如
+说，我们可能更*倾向于*一个有专用的传输队列族的设备，而不是需要它。所以我们需要判断一个特定的队列族是否存在。
 
-因为任何一个 `uint32_t` 都有可能是一个可用的队列族（包括 `0`），所以似乎并不能使用一个特定的数字来代表一个队列族不存在。幸运的是，
-C++17 引进了一个数据结构来区分值存在或不存在的情况：
+因为任何一个 `uint32_t` 都有可能是一个可用的队列族（包括 `0`），所以似乎并不能使用一个特定的数字来代表一个队列族不存在。幸运的
+是，C++17 引进了一个数据结构来区分值存在或不存在的情况：
 
 ```c++
 #include <optional>
@@ -320,6 +320,7 @@ for (const auto& queueFamily : queueFamilies) {
 }
 ```
 
-很好！这些就是我们目前需要的所有的查找合适物理设备的东西了！下一步就是[创建一个逻辑设备](!zh/Drawing_a_triangle/Setup/Logical_device_and_queues)与它交互。
+很好！这些就是我们目前需要的所有的查找合适物理设备的东西了！下一步就是
+[创建一个逻辑设备](!zh/Drawing_a_triangle/Setup/Logical_device_and_queues)与它交互。
 
 [C++ code](/code/03_physical_device_selection.cpp)
